@@ -7,11 +7,12 @@ import './App.css';
 import axios from 'axios';
 
 const App = () => {
-  const [data, setData] = useState(tableData);
+  const [data, setData] = useState([]);
   const [selectedRowIndex, updateSelectedRowIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [fen, setFEN] = useState('');
   const [timestamp, updateTimeStamp] = useState(0);
+  const [videoId, setVideoId] = useState('YteWv1UVN8U');
 
   function updateIndex(index) {
     updateTimeStamp(data[index].timestamp);
@@ -33,31 +34,31 @@ const App = () => {
     setFEN(data[index].next);
   }
 
-  // insertRow, inserts row at selectedRowIndex
-  function insertRow() {
-    if (!data) {
-      return;
-    }
-    const newRow = {
-      timestamp: 0,
-      move: '',
-      prev: '',
-      next: ''
-    }
-    const newData = [...data];
-    newData.splice(selectedRowIndex, 0, newRow);
-    setData(newData);
-  }
+  // // insertRow, inserts row at selectedRowIndex
+  // function insertRow() {
+  //   if (!data) {
+  //     return;
+  //   }
+  //   const newRow = {
+  //     timestamp: 0,
+  //     move: '',
+  //     prev: '',
+  //     next: ''
+  //   }
+  //   const newData = [...data];
+  //   newData.splice(selectedRowIndex, 0, newRow);
+  //   setData(newData);
+  // }
 
-  // deleteRow, deletes row at selectedRowIndex
-  function deleteRow() {
-    if (!data || data.length == 0) {
-      return;
-    }
-    const newData = [...data];
-    newData.splice(selectedRowIndex, 1);
-    setData(newData);
-  }
+  // // deleteRow, deletes row at selectedRowIndex
+  // function deleteRow() {
+  //   if (!data || data.length == 0) {
+  //     return;
+  //   }
+  //   const newData = [...data];
+  //   newData.splice(selectedRowIndex, 1);
+  //   setData(newData);
+  // }
 
   function updateData(url) {
     // request to api at localhost:3000/moves, url as query parameter, use localhost:3000/status to check status at regular interval
@@ -69,6 +70,7 @@ const App = () => {
       }
     }).then(response => {
       setData(response.data);
+      setVideoId(url.split('v=')[1].split('&')[0]);
       setTimeout(() => setIsLoading(false), 1000);
     }).catch(error => {
       console.error(error);
@@ -85,13 +87,13 @@ const App = () => {
           data={data}
           selectedRowIndex={selectedRowIndex}
           updateSelectedRowIndex={updateIndex}
-          insertRow={insertRow}
-          deleteRow={deleteRow}
+          // insertRow={insertRow}
+          // deleteRow={deleteRow}
           updateData={updateData}
           isLoading={isLoading}
         />
         <section>
-          <YouTube videoId={"YteWv1UVN8U"} timestamp={timestamp} onTimeUpdate={onTimeUpdate} />
+          <YouTube videoId={videoId} timestamp={timestamp} onTimeUpdate={onTimeUpdate} />
           <FENPreview fen={fen} />
         </section>
       </section>
